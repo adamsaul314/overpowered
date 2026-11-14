@@ -1,0 +1,11 @@
+{
+  "name": "overpowered",
+  "owner": { "name": "overpowered" },
+  "plugins": [
+    {
+      "name": "overpowered",
+      "source": "./",
+      "description": "Per-feature AI coding workflow: understand → build (TDD, checks, review, ≤2 fix rounds) → final review."
+    }
+  ]
+}

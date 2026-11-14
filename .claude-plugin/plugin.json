@@ -1,0 +1,5 @@
+{
+  "name": "overpowered",
+  "version": "0.1.0",
+  "description": "Per-feature AI coding workflow: grill to an approved plan, then build each vertical slice test-first with checks, a read-only reviewer subagent, a 2-round fix cap, and a final whole-feature review."
+}
