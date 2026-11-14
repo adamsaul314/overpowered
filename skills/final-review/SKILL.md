@@ -1,31 +1,35 @@
 ---
 name: final-review
-description: Final review of a whole overpowered-workflow feature once every slice is done. Reviews the full feature diff for problems that only appear when slices combine, then runs the built-in code-review (and security-review when relevant). Writes docs/features/<slug>/final-review.md. Never edits code.
+description: Final review of a whole overpowered-workflow feature once every slice is done. Reviews the full feature diff for problems that only appear when slices combine, plus the tool's built-in code and security review when available. Writes docs/features/<slug>/final-review.md. Never edits code.
 disable-model-invocation: true
 argument-hint: <feature-slug>
 ---
 
 # final-review: the whole feature, combined
 
-Workflow home: `${CLAUDE_PLUGIN_ROOT}` (WF below; the plugin root).
-Input: `<slug>`. Output: `docs/features/<slug>/final-review.md`. **No code edits.** Fixes go back through `/overpowered:build` or are done by the user.
+Input: `<slug>`. Output: `docs/features/<slug>/final-review.md`. **No code edits.** Fixes go back through the build skill or are done by the user.
 
 ## Steps
 1. **Preflight.** Read `docs/features/<slug>/plan.md`. Every slice must be `done`. If any slice is `flagged` or `todo`, stop and list them. `feature_base` must be set. Recommend a clean tree (everything committed) but don't require one.
-2. **Diff.** Run `bash "${CLAUDE_PLUGIN_ROOT}/scripts/diff-since.sh" <feature_base> <tmpfile>` with `<tmpfile>` = `$(mktemp --suffix=.diff)`.
-3. **Integration review.** Use the Agent tool with `subagent_type: "overpowered:reviewer"`:
+2. **Diff.** Use a temp file outside the repo:
+   ```
+   git diff <feature_base> --no-color --output=<tmpfile> -- . ":(exclude)docs/features"
+   git ls-files --others --exclude-standard -- . ":(exclude)docs/features"
+   ```
+3. **Integration review.** Delegate to the read-only `reviewer` agent (Claude Code: Agent tool with `subagent_type: "overpowered:reviewer"`; Copilot: the `reviewer` custom agent):
    ```
    Mode: final
-   Standards file: <./standards.md if present, else WF/standards.md>
+   Standards file: <absolute path to the project's standards.md>
    Diff file: <tmpfile>
+   New files: <absolute paths, or "none">
    Plan (whole feature: goals, non-goals, all slices' acceptance criteria; omit the Log):
    <text>
    Review per your instructions for mode final and return the report.
    ```
-4. **Built-in checks** (don't rebuild them):
-   - Invoke the `code-review` skill at level `medium` for correctness bugs. Target the feature's changes: if on a feature branch, pass the branch name; otherwise pass the changed paths from the diff.
-   - If the diff touches input parsing, auth, file system or shell access, network or secrets, also invoke `security-review`.
-   - Copy their findings into the report. Don't apply fixes, and don't pass `--fix`.
+4. **Built-in checks** (use what the tool has; don't rebuild them):
+   - **Claude Code:** invoke the `code-review` skill at level `medium` for correctness bugs. If on a feature branch, pass the branch name. Otherwise pass the changed paths. If the diff touches input parsing, auth, file system or shell access, network or secrets, also invoke `security-review`. Don't pass `--fix`.
+   - **Other tools:** skip this step and say so in the report.
+   - Copy their findings into the report. Don't apply fixes.
 5. **Write `docs/features/<slug>/final-review.md`:**
    ```
    # Final review: <slug>
@@ -35,10 +39,11 @@ Input: `<slug>`. Output: `docs/features/<slug>/final-review.md`. **No code edits
    ## Integration review (reviewer, mode final)
    <report verbatim>
 
-   ## /code-review (medium)
-   <findings, or "none">
+   ## Built-in code review
+   <findings, "none", or "not available in this tool">
 
-   ## /security-review
-   <findings, "none", or "not run: no sensitive surface">
+   ## Built-in security review
+   <findings, "none", "not run: no sensitive surface", or "not available in this tool">
    ```
-6. Append the log line `<date> final review: <verdict>` to plan.md (the only edit to the plan). Tell the user the verdict and the top blocking items. Suggest how to fix each one: a new slice in the plan, run through `/overpowered:build`, or a manual fix. Don't start any fix yourself.
+   Delete the temp diff file.
+6. Append the log line `<date> final review: <verdict>` to plan.md (the only edit to the plan). Tell the user the verdict and the top blocking items. Suggest how to fix each one: a new slice in the plan, run through the build skill, or a manual fix. Don't start any fix yourself.

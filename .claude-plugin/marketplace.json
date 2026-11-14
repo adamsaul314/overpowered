@@ -1,6 +1,9 @@
 {
   "name": "overpowered",
-  "owner": { "name": "overpowered" },
+  "description": "The overpowered per-feature AI coding workflow plugin.",
+  "owner": {
+    "name": "adamsaul314"
+  },
   "plugins": [
     {
       "name": "overpowered",

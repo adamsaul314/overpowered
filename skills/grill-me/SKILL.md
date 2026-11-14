@@ -4,4 +4,4 @@ description: A relentless interview to sharpen a plan or design.
 disable-model-invocation: true
 ---
 
-Call the Skill tool with "overpowered:grilling".
+Invoke the `grilling` skill (in Claude Code: `overpowered:grilling`).

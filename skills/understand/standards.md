@@ -1,7 +1,7 @@
 # Clean-Code Standards
 
 > **DRAFT. Edit freely.** These are the defaults the `build` and `review` skills use.
-> If a project has its own `standards.md` in its root, that file is used instead of this one.
+> `understand` copies this file into a project root the first time it runs there. The project copy is the one that's used, so edit it per project.
 > Reviewers cite rules by ID (S1, S2, …), so keep the IDs stable when you edit.
 
 ## Naming

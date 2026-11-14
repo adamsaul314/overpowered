@@ -7,21 +7,25 @@ argument-hint: <feature idea>
 
 # understand: from idea to an approved plan
 
-Workflow home: `${CLAUDE_PLUGIN_ROOT}` (WF below; the plugin root).
-Input: the feature idea in the arguments or the conversation. Output: `docs/features/<slug>/plan.md` in the current project, then a **stop**.
+Input: the feature idea in the arguments or the conversation. Output: `docs/features/<slug>/plan.md` in the current project (plus `standards.md` on first use), then a **stop**.
 
-**Hard rule: write no production or test code in this skill.** The only file you create is the plan.
+This skill's folder holds `plan-template.md` and `standards.md`. Read them from this skill's own directory.
+Skill names: in Claude Code, this plugin's skills are prefixed `overpowered:` (e.g. `overpowered:grilling`). Elsewhere, use the bare name (`grilling`).
+
+**Hard rule: write no production or test code in this skill.**
 
 ## Steps
 
-1. **Preflight.** Confirm the current directory is a git repo (`git rev-parse --show-toplevel`). If it isn't, stop and tell the user. The later steps need git for diffs.
-2. **Grill.** Invoke the `overpowered:grilling` skill with the Skill tool (not `overpowered:grill-me`, which only the user can invoke) and run it to completion on the feature idea. Look up facts about the codebase yourself, as grilling says. Make sure the grilling covers:
+1. **Preflight.**
+   - The current directory must be a git repo (`git rev-parse --show-toplevel`). If it isn't, stop and tell the user. The later steps need git for diffs.
+   - If the project root has no `standards.md`, copy this skill's `standards.md` there and tell the user it's a draft they should edit. build and review read the project's copy.
+2. **Grill.** Invoke the `grilling` skill (not `grill-me`, which only the user can invoke) and run it to completion on the feature idea. Look up facts about the codebase yourself, as grilling says. Make sure the grilling covers:
    - goals stated as observable outcomes, and explicit non-goals
    - how to cut the work into **vertical slices**: each one is thin, end-to-end, independently testable, and ordered so each builds on the last
    - acceptance criteria for each slice, phrased so each one becomes a test
    - edge cases and error behavior
-   - anything in the project's own conventions that overrides `WF/standards.md`
-3. **Write the plan.** Copy `WF/templates/plan.md` to `docs/features/<slug>/plan.md` (choose a short kebab-case slug) and fill it in. Rules:
+   - anything in the project's own conventions that overrides `standards.md`
+3. **Write the plan.** Copy `plan-template.md` to `docs/features/<slug>/plan.md` (choose a short kebab-case slug) and fill it in. Rules:
    - `approval: awaiting-approval`, and leave `feature_base` empty.
    - Number the acceptance criteria `AC<slice>.<n>`. Each must be observable (input → output or effect), not "code is clean".
    - Prefer 2–6 slices. If you have more, the feature is probably two features. Say so.
@@ -34,8 +38,8 @@ Input: the feature idea in the arguments or the conversation. Output: `docs/feat
 
 5. **On approval only.** When the user explicitly approves ("approved", "OK", "go"), and only then:
    - set `approval: approved`
-   - set `feature_base` to the current `git rev-parse HEAD`. Uncommitted changes outside `docs/features/` (`git status --porcelain -- . ':(exclude)docs/features'`) mean feature_base isn't a clean point. In that case tell the user to commit or stash them first. The plan file itself may be uncommitted.
+   - set `feature_base` to the current `git rev-parse HEAD`. Uncommitted changes outside `docs/features/` (`git status --porcelain -- . ":(exclude)docs/features"`) mean feature_base isn't a clean point. In that case tell the user to commit or stash them first. The plan file itself may be uncommitted.
    - append the log line `<date> approved at <sha>`
-   - tell the user the next step: **commit the plan, run `/clear`, then `/overpowered:build <slug> slice-1`.**
+   - tell the user the next step: **commit the plan (and `standards.md` if new), start a fresh context (`/clear`), then run the `build` skill with `<slug> slice-1`.**
 
    If the user asks for changes instead, edit the plan and repeat step 4.
