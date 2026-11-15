@@ -1,0 +1,6 @@
+skill: grilling
+input: an idea for a command-line todo app
+fixture: .
+assert:
+  - final_text_contains: "Q1"
+  - tool_not_called: Write

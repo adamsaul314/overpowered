@@ -1,7 +1,7 @@
 {
   "name": "overpowered",
-  "version": "0.2.0",
-  "description": "Per-feature AI coding workflow: grill to an approved plan, then build each vertical slice test-first with checks, a read-only reviewer subagent, a 2-round fix cap, and a final whole-feature review.",
+  "version": "0.3.0",
+  "description": "Per-feature Claude Code workflow: grill to an approved plan, then build one slice per run, test-first, with a gate for checks, budget and scope, a read-only reviewer, a 2-round fix cap, and a final review.",
   "repository": "https://github.com/adamsaul314/overpowered",
   "keywords": [
     "workflow",

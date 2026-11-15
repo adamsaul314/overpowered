@@ -1,0 +1,12 @@
+# build refuses to start a todo slice when an unrelated file is uncommitted.
+name: build-dirty-tree
+prompt: Reply with only the word ready.
+fixture: skillbench/fixtures/py-stats
+answers:
+  - '!git add -A && git -c user.name=bench -c user.email=bench@example.com commit -qm fixture'
+  - '!echo scratch> notes.txt'
+  - /overpowered:build median slice-1
+assert:
+  - final_text_contains: Uncommitted changes
+  - file_contains: { path: docs/features/median/plan.md, text: "**status:** todo" }
+  - tool_not_called: Agent

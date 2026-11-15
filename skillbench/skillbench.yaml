@@ -1,0 +1,9 @@
+# Defaults for every test in this folder. A test's own fields win over these,
+# and command-line flags (--model, --repeat) win over both.
+
+plugin: . # load overpowered into every test, whatever repo it runs on
+model: claude-haiku-5-5 # cheapest model; override with --model when needed
+timeout_s: 600 # seconds before one turn is stopped
+# repeat: 1                  # run every test N times (each run uses real quota)
+# min_pass_rate: 1.0         # with repeats: the share of runs that must pass
+# fixture: .                 # the repo tests work in when they don't name one ("." = this repo)

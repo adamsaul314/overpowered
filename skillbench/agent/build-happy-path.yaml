@@ -1,0 +1,15 @@
+# build on an approved one-slice plan: builder, gate, reviewer, done. Expects a PASS review.
+name: build-happy-path
+prompt: Reply with only the word ready.
+fixture: skillbench/fixtures/py-stats
+answers:
+  - '!git add -A && git -c user.name=bench -c user.email=bench@example.com commit -qm fixture'
+  - /overpowered:build median slice-1
+timeout_s: 1800
+assert:
+  - subagent_invoked: reviewer
+  - command_succeeds: python -m unittest discover -s tests -q
+  - file_contains: { path: docs/features/median/review-slice-1.md, text: "**Latest verdict: PASS" }
+  - file_contains: { path: docs/features/median/plan.md, text: "**status:** done" }
+  # The test name carries the AC ID; the only (indirect) evidence of test-first skillbench can check.
+  - file_contains: { path: tests/test_core.py, text: "ac1_1" }

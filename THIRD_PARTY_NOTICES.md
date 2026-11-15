@@ -1,13 +1,13 @@
 # Third-party notices
 
-This plugin bundles skills adapted from the projects below. Both are MIT-licensed, and their license text is reproduced here as that license requires.
+This plugin bundles material adapted from the projects below. Both are MIT-licensed, and their license text is reproduced here as that license requires.
 
-| Bundled skill | Source | License |
+| Bundled file | Source | License |
 |---|---|---|
 | `skills/grilling`, `skills/grill-me` | [mattpocock/skills](https://github.com/mattpocock/skills) (`skills/productivity/`) | MIT |
-| `skills/test-driven-development` (incl. `writing-good-tests.md`) | [obra/superpowers](https://github.com/obra/superpowers) (`skills/test-driven-development/`) | MIT |
+| `skills/build/tdd.md` | [obra/superpowers](https://github.com/obra/superpowers) (`skills/test-driven-development/`, incl. `writing-good-tests.md`) | MIT |
 
-Local changes: `grill-me` points to the bundled `grilling` skill.
+Local changes: `grill-me` points to the bundled `grilling` skill. `skills/build/tdd.md` is an adapted and condensed version of the superpowers TDD skill and its test-writing guide. It's a reference file the build skill's subagents read, not a skill. The rationalization table, the red-flags list and the diagram were dropped.
 
 ---
 

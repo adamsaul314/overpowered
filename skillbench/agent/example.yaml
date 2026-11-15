@@ -1,0 +1,16 @@
+# An agent loop test: a normal prompt, nothing forced. Checks that the agent picked the right
+# skills and tools on its own and finished the job.
+# Run it with:  skillbench agent
+#
+#   answers:  replies sent one per turn when the agent stops to ask something.
+#   assert:   checks on what happened. tool_order passes if those tools were called in that
+#             order (other calls in between are fine).
+name: hello-loop
+prompt: Please greet the platform team for me.
+fixture: skillbench/fixtures/sample-repo
+answers: []
+assert:
+  - skill_invoked: hello
+  - skill_not_invoked: deploy
+  - tool_order: [Skill]
+  - final_text_contains: Hello
