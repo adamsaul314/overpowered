@@ -1,0 +1,23 @@
+# A skill test: skillbench invokes one skill directly and checks what it did.
+# Run it with:  skillbench skill
+#
+#   skill:    the skill's name, or its path in the repo. skillbench looks in .claude/skills/,
+#             skills/, .github/skills/ and any plugin, and builds the /command.
+#   input:    the text after the /command.
+#   fixture:  the repo the agent works in, copied to a temp folder first so nothing real is
+#             touched. "." is this repo, a path is a folder in it, a git URL is cloned:
+#               fixture: {git: https://github.com/you/app.git, ref: main}
+name: hello-greets-by-name
+skill: hello
+input: the platform team
+fixture: skillbench/fixtures/sample-repo
+assert:
+  - skill_invoked: hello
+  - final_text_contains: Hello
+  - tool_not_called: Write
+
+# Trigger tests: does the skill's description make the agent pick it? Each prompt is one
+# short run that stops as soon as the agent decides. Uncomment to try:
+# triggers:
+#   should: ["say hi to Ada for me"]
+#   should_not: ["what is 2 + 2?"]

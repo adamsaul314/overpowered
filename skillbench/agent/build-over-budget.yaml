@@ -1,0 +1,10 @@
+# A slice whose code budget is 5 lines but whose ACs need ~15 stops as needs-decision.
+name: build-over-budget
+prompt: Reply with only the word ready.
+fixture: skillbench/fixtures/py-stats
+answers:
+  - '!git add -A && git -c user.name=bench -c user.email=bench@example.com commit -qm fixture'
+  - /overpowered:build tiny-budget slice-1
+timeout_s: 1800
+assert:
+  - file_contains: { path: docs/features/tiny-budget/plan.md, text: "**status:** needs-decision" }

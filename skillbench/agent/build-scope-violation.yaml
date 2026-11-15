@@ -1,0 +1,11 @@
+# A slice whose ACs need stats/__init__.py, which is outside files:, stops as needs-decision
+# (either the gate sees the out-of-scope file or the builder reports SCOPE:).
+name: build-scope-violation
+prompt: Reply with only the word ready.
+fixture: skillbench/fixtures/py-stats
+answers:
+  - '!git add -A && git -c user.name=bench -c user.email=bench@example.com commit -qm fixture'
+  - /overpowered:build out-of-scope slice-1
+timeout_s: 1800
+assert:
+  - file_contains: { path: docs/features/out-of-scope/plan.md, text: "**status:** needs-decision" }

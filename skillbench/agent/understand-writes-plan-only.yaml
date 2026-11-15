@@ -1,0 +1,20 @@
+# understand on the py-stats fixture: grills, writes the plan as awaiting-approval, and touches
+# nothing outside docs/features and standards.md. The first turn is a cheap setup turn: skillbench
+# folder fixtures are git-initialised but not committed, and understand needs a clean tree.
+name: understand-writes-plan-only
+prompt: Reply with only the word ready.
+fixture: skillbench/fixtures/py-stats
+answers:
+  - '!git add -A && git -c user.name=bench -c user.email=bench@example.com commit -qm fixture'
+  - >-
+    /overpowered:understand add a value_range(values) function to stats/core.py that returns
+    max - min and raises ValueError on empty input. Use the feature slug stats-range. One slice only.
+    Checks: tests run with python -m unittest discover -s tests -q; lint, typecheck and format are none.
+  - Yes to all your recommended answers, including any further questions. Write the plan.
+assert:
+  - skill_invoked: overpowered:grilling
+  - file_contains:
+      { path: docs/features/stats-range/plan.md, text: "**approval:** awaiting-approval" }
+  # Fails if anything outside docs/features and standards.md changed (no source or test files written).
+  - command_succeeds: >-
+      python -c "import subprocess,sys; out=subprocess.run(['git','status','--porcelain','--','.',':(exclude)docs/features',':(exclude)standards.md'],capture_output=True,text=True).stdout; print(out); sys.exit(1 if out.strip() else 0)"

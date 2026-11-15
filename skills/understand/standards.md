@@ -1,6 +1,6 @@
 # Clean-Code Standards
 
-> **DRAFT. Edit freely.** These are the defaults the `build` and `review` skills use.
+> **DRAFT. Edit freely.** These are the defaults the `build` skill and the `reviewer` agent use.
 > `understand` copies this file into a project root the first time it runs there. The project copy is the one that's used, so edit it per project.
 > Reviewers cite rules by ID (S1, S2, …), so keep the IDs stable when you edit.
 

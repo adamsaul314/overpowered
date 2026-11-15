@@ -1,6 +1,6 @@
 {
   "name": "overpowered",
-  "description": "The overpowered per-feature AI coding workflow plugin.",
+  "description": "The overpowered per-feature AI coding workflow plugin for Claude Code.",
   "owner": {
     "name": "adamsaul314"
   },
@@ -8,7 +8,8 @@
     {
       "name": "overpowered",
       "source": "./",
-      "description": "Per-feature AI coding workflow: understand → build (TDD, checks, review, ≤2 fix rounds) → final review."
+      "version": "0.3.0",
+      "description": "Per-feature workflow: understand → build one slice per run (TDD, gate with budgets, read-only review, ≤2 fix rounds) → final review."
     }
   ]
 }

@@ -1,0 +1,35 @@
+# Full overpowered loop on Turn-of-Fate: understand -> approve -> commit -> build slice-1 -> commit -> final-review.
+# Small feature: a pure calcDamage(attacker, defender) function in script.js, tested with node's built-in runner.
+name: full-loop-damage
+prompt: >-
+  /overpowered:understand add a calcDamage(attacker, defender) function to script.js that returns
+  max(1, attacker.attack - defender.defend), and export it with
+  `if (typeof module !== 'undefined') module.exports = { calcDamage, characters };`
+  so node can load it. Use the feature slug calc-damage. One slice only. Non-goals: no UI changes, no combat loop.
+  Project checks: tests run with `node --test` (put tests in script.test.js); there is no lint, typecheck or format step, so use "none" for those.
+fixture:
+  git: https://github.com/adamsaul314/Turn-of-Fate
+  ref: cd5def0bd5f15a23e71048a30e788bf86b998f6b
+answers:
+  - Yes to all your recommended answers, including any further questions. Write the plan.
+  - approved
+  - '!git add -A && git -c user.name=bench -c user.email=bench@example.com commit -m "plan: calc-damage"'
+  - /overpowered:build calc-damage slice-1
+  - '!git add -A && git -c user.name=bench -c user.email=bench@example.com commit -m "calc-damage: slice-1"'
+  - /overpowered:final-review calc-damage
+timeout_s: 2400
+assert:
+  - skill_invoked: overpowered:grilling
+  - subagent_invoked: reviewer
+  - file_contains:
+      {
+        path: docs/features/calc-damage/plan.md,
+        text: "**approval:** approved",
+      }
+  - file_contains: { path: docs/features/calc-damage/plan.md, text: "done" }
+  - file_contains:
+      { path: docs/features/calc-damage/review-slice-1.md, text: "PASS" }
+  - file_contains:
+      { path: docs/features/calc-damage/final-review.md, text: "Verdict" }
+  - file_contains: { path: script.js, text: "calcDamage" }
+  - command_succeeds: node --test

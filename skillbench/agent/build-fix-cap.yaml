@@ -1,0 +1,12 @@
+# The plan's lint check always fails, whatever the code. The fixer should name that cause
+# (BLOCKED:) and build should end the slice as flagged: not needs-decision, and with no wasted
+# extra rounds. The 2-round cap itself isn't asserted, since a capable fixer stops earlier.
+name: build-fix-cap
+prompt: Reply with only the word ready.
+fixture: skillbench/fixtures/py-stats
+answers:
+  - '!git add -A && git -c user.name=bench -c user.email=bench@example.com commit -qm fixture'
+  - /overpowered:build always-red slice-1
+timeout_s: 1800
+assert:
+  - file_contains: { path: docs/features/always-red/plan.md, text: "**status:** flagged" }
